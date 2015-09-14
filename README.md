@@ -24,7 +24,7 @@ Example:
         ScreenDriver.setScreen("my screen");
         ScreenDriver.addComponent("my screen", new CTextBox(10, 5, 5, bp));
         ScreenDriver.render(); //Should be called from a loop running about 20 - 50 times a second
-        
+    }
         //Define the border preset
         public void borderPreset() {
             bp.horizontal.Char.UnicodeChar = Convert.ToChar(196);
@@ -40,5 +40,5 @@ Example:
             bp.bottomRight.Char.UnicodeChar = Convert.ToChar(217);
             bp.bottomRight.Attributes = 1;
         }
-    }
+    
 ```
