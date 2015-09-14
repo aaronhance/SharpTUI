@@ -32,7 +32,7 @@ namespace SharpTUI
             this.width = width;
 
             this.borderPreset = borderPreset;
-            border();
+            type = "TextBox";
         }
 
         public void border(){

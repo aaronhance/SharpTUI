@@ -156,24 +156,30 @@ namespace SharpTUI
             cood mousePos = getConsolePosition(x, y);
 
             Component comp = findFromPosition(mousePos.x, mousePos.y);
-            if (comp != null) {
+            if (comp != null && comp != componentFocused) {
                 //componentFocused.lostFocus(); // bitch please, I always break your code!
                 componentFocused = comp;
-                comp.gotFocus(mousePos.x, mousePos.y, keyPressed);
+                componentFocused.gotFocus(mousePos.x, mousePos.y, keyPressed);
+                componentFocused.onMouseClick(keyPressed);
+            }
+            else if(comp == componentFocused){
+                componentFocused.onMouseClick(keyPressed);
             }
         }
 
         //Needs to be fixed :/
 
         public static void keyboardButtonPressed(Keys keys) {
-            if (keys.ToString() != "Back" && keys.ToString() != "LShiftKey") {
-                componentFocused.setText(componentFocused.getText() + keys.ToString().ToLower());
-            }
-            else if (keys.ToString() != "Back" && keys.ToString() == "LShiftKey" && lastKey.ToString() == "LShiftKey") {
-                componentFocused.setText(componentFocused.getText() + keys.ToString().ToUpper());
-            }
-            else if (keys.ToString() == "Back") {
-                componentFocused.setText(componentFocused.getText().Substring(0, componentFocused.getText().Length - 1));
+            if(componentFocused.type == "TextBox"){
+                if (keys.ToString() != "Back" && keys.ToString() != "LShiftKey") {
+                    componentFocused.setText(componentFocused.getText() + keys.ToString().ToLower());
+                }
+                else if (keys.ToString() != "Back" && keys.ToString() == "LShiftKey" && lastKey.ToString() == "LShiftKey") {
+                    componentFocused.setText(componentFocused.getText() + keys.ToString().ToUpper());
+                }
+                else if (keys.ToString() == "Back" ) {
+                    componentFocused.setText(componentFocused.getText().Substring(0, componentFocused.getText().Length - 1));
+                }
             }
 
             lastKey = keys;

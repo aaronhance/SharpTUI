@@ -16,10 +16,14 @@ namespace SharpTUI
         public string borderMode;
         public Screen parent;
         public bool hasFocus;
+        public bool hasLastClick;
 
         public Kernal32.CharInfo[] screenBuffer = new Kernal32.CharInfo[width * height]; 
         public bool[] screenBufferSet = new bool[width * height];
 
+        public delegate void delMouseClick();
+        public static delMouseClick onLeftMouseClick;
+        public static delMouseClick onRightMouseClick;
 
         public Component(){
 
@@ -44,6 +48,12 @@ namespace SharpTUI
         //I'm also fucking broke, ha jokes on you!
         public virtual void lostFocus(){
             hasFocus = false;
+        }
+
+        public void onMouseClick(char keyPressed) {
+            hasLastClick = true;
+            if (keyPressed == Convert.ToChar("L")) Component.onLeftMouseClick.Invoke();
+            else if (keyPressed == Convert.ToChar("R")) Component.onRightMouseClick.Invoke();
         }
 
 
