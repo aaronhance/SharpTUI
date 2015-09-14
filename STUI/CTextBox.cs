@@ -31,8 +31,6 @@ namespace SharpTUI
             this.width = width;
 
             this.borderPreset = borderPreset;
-            //screenBuffer2D = new Kernal32.CharInfo[width][3];
-            //screenBuffer = new Kernal32.CharInfo[width * 3];
             consoleHandle = Kernal32.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
             border();
         }
@@ -74,21 +72,6 @@ namespace SharpTUI
         public void lostFocus()
         {
             hasFocus = false;
-        }
-
-        public void testMethod()
-        {
-            border();
-            Kernal32.SmallRect sr = new Kernal32.SmallRect();
-            sr.Bottom = height;
-            sr.Top = 0;
-            sr.Left = 0;
-            sr.Right = Convert.ToInt16(width);
-            int x = 0;
-            int y = 0;
-            int xx = Convert.ToInt16(width); ;
-            int yy = height;
-            Kernal32.WriteConsoleOutput(consoleHandle, screenBuffer, new Kernal32.Coord((short)xx, (short)yy), new Kernal32.Coord((short)x, (short)y), ref sr);
         }
 
     }

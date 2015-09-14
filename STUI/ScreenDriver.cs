@@ -38,7 +38,8 @@ namespace SharpTUI
             screens = new Screen[maxScreens];        
             consoleHandle = Kernal32.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
-           // Kernal32.GetConsoleScreenBufferInfo(consoleHandle.DangerousGetHandle(), out consoleInfo);
+            Thread mouseHandler = new Thread(new ThreadStart(() => new IO.Mouse()));
+            mouseHandler.Start();
 
             handle = Process.GetCurrentProcess().MainWindowHandle;
             User32.GetWindowRect(handle, ref windowRect);
@@ -49,7 +50,6 @@ namespace SharpTUI
             //To be improved - add render order(priority value?)!
             foreach (Component component in currentScreen.components) {
                 component.render();
-                //get small array for each component and it's origin and compile into a buffer!
             }
 
             Kernal32.SmallRect sr = new Kernal32.SmallRect();
@@ -135,14 +135,10 @@ namespace SharpTUI
             //position / (width - offset) / console units +/- console offset
 
             return position;
-
-            //Window rect needs re-updating ever time this is called!
         }
 
         public static void mouseButtonPressed(int x, int y, char keyPressed) {
-            //Console.WriteLine("Callback to mouse Button pressed. Data:" + x.ToString() + y.ToString() + keyPressed);
             cood mousePos = getConsolePosition(x, y);
-            //Console.WriteLine(((x - windowRect.left) / ((windowRect.right - windowRect.left - 30) / 80) - 1).ToString() + ", " + ((y - windowRect.top) / ((windowRect.bottom - windowRect.top - 43) / 25) - 3).ToString());
 
             Component comp = findFromPosition(x, y);
             if (comp != null) {

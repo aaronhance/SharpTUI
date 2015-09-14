@@ -100,7 +100,6 @@ namespace SharpTUI.IO
                 MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
                 MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-                //Console.WriteLine(hookStruct.pt.x + ", " + hookStruct.pt.y);
                 ScreenDriver.onMouseButtonPressed.Invoke(hookStruct.pt.x, hookStruct.pt.y, Convert.ToChar("L"));
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
