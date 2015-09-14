@@ -43,6 +43,7 @@
     <Compile Include="Cbutton.cs" />
     <Compile Include="CLabel.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="CLoadingBar.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="CTextBox.cs" />
     <Compile Include="Input.cs" />
