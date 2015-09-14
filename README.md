@@ -14,7 +14,7 @@ If you want to start using the framework right now then follow these steps:
 
 
 Example:
-'''csharp
+'''cs
         ScreenDriver.BorderPreset bp = new ScreenDriver.BorderPreset();
         
     public void method(){
