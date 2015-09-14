@@ -10,3 +10,8 @@ If you want to start using the framework right now then follow these steps:
 2. File -> add -> exsisting project -> add the STUI project(download it if you havn't already)
 
 3. Add a reference to it. Open solution explorer right click references on your console project -> add referance find  SharpTUI under solution.
+
+
+
+INFO: The current release will not work out of the box.
+
