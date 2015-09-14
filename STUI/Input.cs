@@ -23,6 +23,7 @@ namespace SharpTUI.IO
         public Keyboard()
         {
             _hookID = SetHook(_proc);
+            Application.Run();
             UnhookWindowsHookEx(_hookID);
         }
 
@@ -45,7 +46,7 @@ namespace SharpTUI.IO
             if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-                Console.WriteLine((Keys)vkCode);
+                ScreenDriver.onKeyboardButtonPressed.Invoke((Keys)vkCode);
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }

@@ -23,6 +23,7 @@ namespace SharpTUI
                 if (components[i] == null)
                 {
                     components[i] = newComponent;
+                    break;
                 }
             }
         }

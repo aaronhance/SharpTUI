@@ -12,17 +12,18 @@ namespace SharpTUI
 {
     public class CTextBox : Component
     {
-        string borderMode;
         int width;
         const int height = 3;
 
         ScreenDriver.BorderPreset borderPreset;
         Kernal32.CharInfo blankPreset = new Kernal32.CharInfo();
 
-        SafeFileHandle consoleHandle;
+
+        private string text = "";
+
 
         public CTextBox(int width, int positionX, int positionY, ScreenDriver.BorderPreset borderPreset)
-        {
+{
             this.parent = parent;
             this.left = positionX;
             this.right = positionX + width;
@@ -31,12 +32,10 @@ namespace SharpTUI
             this.width = width;
 
             this.borderPreset = borderPreset;
-            consoleHandle = Kernal32.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
             border();
         }
 
-        public void border()
-        {
+        public void border(){
 
             blankPreset.Char.UnicodeChar = Convert.ToChar("B");
             blankPreset.Attributes = 01;
@@ -51,26 +50,33 @@ namespace SharpTUI
             drawHorizontalLine(left, bottom, left + 1, borderPreset.bottomLeft);
             drawHorizontalLine(right, bottom, right + 1, borderPreset.bottomRight);
 
-            //  for (int i = 175; i < 220; i++) {
-            //      Kernal32.CharInfo x = new Kernal32.CharInfo();
-            //      x.Char.UnicodeChar = Convert.ToChar(i);
-            //      x.Attributes = 01;
-            //      screenBuffer[i] = x;
-            //      screenBufferSet[i] = true;
-            //  }
+            drawString(left + 1, top + 1, text, 01);
+
         }
 
-        //public void textField;
+        public override void render() {
+            border();
+            base.render();
+        }
 
-        public override void gotFocus(int x, int y, char keyPressed)
-        {
+
+        public override void gotFocus(int x, int y, char keyPressed){
             hasFocus = true;
-            Console.SetCursorPosition(left + 1, top + 1);
         }
 
-        public void lostFocus()
-        {
+        public override void lostFocus(){
             hasFocus = false;
+        }
+
+        public override void setText(string text) {
+            if (text.Length <= width - 2){
+                this.text = text;
+            }
+            else throw new ArgumentException("(string text): \"" + text + "\" length is to long for the textbox! Max string length: " + (width - 2));
+        }
+
+        public override string getText() {
+            return text;
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System.IO;
@@ -26,32 +27,36 @@ namespace SharpTUI
         static Kernal32.CharInfo ci;
         public static Kernal32.CONSOLE_SCREEN_BUFFER_INFO consoleInfo = new Kernal32.CONSOLE_SCREEN_BUFFER_INFO();
 
-        public delegate void delButtonPress(int x, int y, char keyPressed);
+        private static Keys lastKey;
 
-        public static delButtonPress onMouseButtonPressed;
+        public delegate void delMouseButtonPress(int x, int y, char keyPressed);
+        public delegate void delKeyboardButtonPress(Keys key);
+
+        public static delMouseButtonPress onMouseButtonPressed;
+        public static delKeyboardButtonPress onKeyboardButtonPressed;
 
         public static void init(int maxScreensIn){
             //callBacks
             onMouseButtonPressed = mouseButtonPressed;
+            onKeyboardButtonPressed = keyboardButtonPressed;
             //other shit
             maxScreens = maxScreensIn;
             screens = new Screen[maxScreens];        
             consoleHandle = Kernal32.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
             Thread mouseHandler = new Thread(new ThreadStart(() => new IO.Mouse()));
+            Thread keyboardHandler = new Thread(new ThreadStart(() => new IO.Keyboard()));
             mouseHandler.Start();
+            keyboardHandler.Start();
 
             handle = Process.GetCurrentProcess().MainWindowHandle;
             User32.GetWindowRect(handle, ref windowRect);
+
+            Console.CursorVisible = false;
          }
 
 
         public static void render() { 
-            //To be improved - add render order(priority value?)!
-            foreach (Component component in currentScreen.components) {
-                component.render();
-            }
-
             Kernal32.SmallRect sr = new Kernal32.SmallRect();
             sr.Bottom = 25;
             sr.Top = 0;
@@ -61,6 +66,15 @@ namespace SharpTUI
             int y = 0;
             int xx = 80;
             int yy = 25;
+
+            screenBuffer = new Kernal32.CharInfo[screenBuffer.Length];
+
+            foreach (Component component in currentScreen.components) {
+                if (component != null) {
+                    component.render();
+                }
+            }
+
             Kernal32.WriteConsoleOutput(consoleHandle, screenBuffer, new Kernal32.Coord((short)xx, (short)yy), new Kernal32.Coord((short)x, (short)y), ref sr);
         }
 
@@ -120,7 +134,7 @@ namespace SharpTUI
 
         public static Component findFromPosition(int x, int y) {
             foreach(Component c in currentScreen.components){
-                if (x > c.left && x < c.right && y > c.top && y < c.bottom){
+                if (x > c.left && x < c.right && y > c.top - 1 && y < c.bottom + 1){
                     return c;
                 }
             }
@@ -141,12 +155,28 @@ namespace SharpTUI
         public static void mouseButtonPressed(int x, int y, char keyPressed) {
             cood mousePos = getConsolePosition(x, y);
 
-            Component comp = findFromPosition(mousePos.x, mousePos.y + 1);
+            Component comp = findFromPosition(mousePos.x, mousePos.y);
             if (comp != null) {
-                //componentFocused.lostFocus();
-               componentFocused = comp;
+                //componentFocused.lostFocus(); // bitch please, I always break your code!
+                componentFocused = comp;
                 comp.gotFocus(mousePos.x, mousePos.y, keyPressed);
             }
+        }
+
+        //Needs to be fixed :/
+
+        public static void keyboardButtonPressed(Keys keys) {
+            if (keys.ToString() != "Back" && keys.ToString() != "LShiftKey") {
+                componentFocused.setText(componentFocused.getText() + keys.ToString().ToLower());
+            }
+            else if (keys.ToString() != "Back" && keys.ToString() == "LShiftKey" && lastKey.ToString() == "LShiftKey") {
+                componentFocused.setText(componentFocused.getText() + keys.ToString().ToUpper());
+            }
+            else if (keys.ToString() == "Back") {
+                componentFocused.setText(componentFocused.getText().Substring(0, componentFocused.getText().Length - 1));
+            }
+
+            lastKey = keys;
         }
 
         public struct cood{
