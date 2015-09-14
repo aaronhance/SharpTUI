@@ -133,9 +133,11 @@ namespace SharpTUI
         }
 
         public static Component findFromPosition(int x, int y) {
-            foreach(Component c in currentScreen.components){
-                if (x > c.left && x < c.right && y > c.top - 1 && y < c.bottom + 1){
-                    return c;
+            foreach (Component c in currentScreen.components) {
+                if (c != null) {
+                    if (x > c.left && x < c.right && y > c.top - 1 && y < c.bottom + 1) {
+                        return c;
+                    }
                 }
             }
 
