@@ -14,11 +14,12 @@ If you want to start using the framework right now then follow these steps:
 
 
 Example:
-'''cs
+```cs
         ScreenDriver.BorderPreset bp = new ScreenDriver.BorderPreset();
         
     public void method(){
-
+    
+        ScreenDriver.init();
         ScreenDriver.newScreen("my screen");
         ScreenDriver.setScreen("my screen");
         ScreenDriver.addComponent("my screen", new CTextBox(10, 5, 5, bp));
@@ -40,4 +41,4 @@ Example:
             bp.bottomRight.Attributes = 1;
         }
     }
-'''
+```
