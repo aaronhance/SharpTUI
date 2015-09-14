@@ -14,7 +14,7 @@ If you want to start using the framework right now then follow these steps:
 
 
 Example:
-'''c#
+'''csharp
         ScreenDriver.BorderPreset bp = new ScreenDriver.BorderPreset();
         
     public void method(){
@@ -40,4 +40,4 @@ Example:
             bp.bottomRight.Attributes = 1;
         }
     }
-''''
+'''
