@@ -42,12 +42,12 @@ namespace SharpTUI
             }
         };
 
-        public void gotFocus(int x, int y, char keyPressed)
+        public virtual void gotFocus(int x, int y, char keyPressed)
         {
             hasFocus = true;
         }
 
-        public void lostFocus()
+        public virtual void lostFocus()
         {
             hasFocus = false;
         }
@@ -66,7 +66,7 @@ namespace SharpTUI
 
         // public void doSomeFuckingShitAndLearnToProgram()
         // {
-        // onLeftMouseClick(10, 20); //Deleigates are in opisit places
+        // onLeftMouseClick(10, 20); 
         // }
 
         public void drawHorizontalLine(int startX, int startY, int finish, Kernal32.CharInfo ci)

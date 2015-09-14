@@ -62,11 +62,10 @@ namespace SharpTUI
 
         //public void textField;
 
-        public void gotFocus(int x, int y, char keyPressed)
+        public override void gotFocus(int x, int y, char keyPressed)
         {
             hasFocus = true;
-            Console.WriteLine("I'm being called!");
-            Console.SetCursorPosition(left + 1, top - 1);
+            Console.SetCursorPosition(left + 1, top + 1);
         }
 
         public void lostFocus()

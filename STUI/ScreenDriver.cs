@@ -119,11 +119,12 @@ namespace SharpTUI
         }
 
         public static Component findFromPosition(int x, int y) {
-            for (int i = currentScreen.components.Length; i >= 0; i--){
-                if (x > currentScreen.components[i].left && x < currentScreen.components[i].right && y > currentScreen.components[i].top && y < currentScreen.components[i].bottom){
-                    return currentScreen.components[i];
+            foreach(Component c in currentScreen.components){
+                if (x > c.left && x < c.right && y > c.top && y < c.bottom){
+                    return c;
                 }
             }
+
             return null;
         }
 
@@ -140,11 +141,11 @@ namespace SharpTUI
         public static void mouseButtonPressed(int x, int y, char keyPressed) {
             cood mousePos = getConsolePosition(x, y);
 
-            Component comp = findFromPosition(x, y);
+            Component comp = findFromPosition(mousePos.x, mousePos.y + 1);
             if (comp != null) {
-                componentFocused.lostFocus();
-                componentFocused = comp;
-                componentFocused.gotFocus(mousePos.x, mousePos.y, keyPressed);
+                //componentFocused.lostFocus();
+               componentFocused = comp;
+                comp.gotFocus(mousePos.x, mousePos.y, keyPressed);
             }
         }
 
@@ -162,6 +163,9 @@ namespace SharpTUI
             public Kernal32.CharInfo topRight;
             public Kernal32.CharInfo bottomLeft;
             public Kernal32.CharInfo bottomRight;
+        }
+
+        public static void test(){
         }
 
     }
