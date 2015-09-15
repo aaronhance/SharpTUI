@@ -83,12 +83,10 @@ namespace SharpTUI
                 foreach (Screen screen in screens) {
                     if (screen == null) {
                         screens[currentScreens] = new Screen(name);
-
+                        currentScreens++;
                         return true;
                     }
                 }
-                screens[currentScreens] = new Screen(name);
-                currentScreens++;
                 return true;
             } else return false;
         }
