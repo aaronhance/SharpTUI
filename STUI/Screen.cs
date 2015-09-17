@@ -8,24 +8,13 @@ namespace SharpTUI
 {
     public class Screen
     {
-        public Component[] components = new Component[100];
-        public string name;
+        public List<Component> componentList = new List<Component>();
 
-        public Screen(string name)
-        {
-            this.name = name;
+        public Screen(){
         }
 
-        public void addComponent(Component newComponent)
-        {
-            for (int i = 0; i < components.Length; i++)
-            {
-                if (components[i] == null)
-                {
-                    components[i] = newComponent;
-                    break;
-                }
-            }
+        public void addComponent(Component newComponent){
+            componentList.Add(newComponent);
         }
 
     }

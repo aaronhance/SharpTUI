@@ -14,8 +14,7 @@ namespace SharpTUI
 {
     public static class ScreenDriver
     {
-        private static Screen[] screens;
-        private static int currentScreens, maxScreens = 0;
+        private static Dictionary<string, Screen> screens = new Dictionary<string, Screen>();
         private static Screen currentScreen = null;
         private static Component componentFocused;
 
@@ -35,13 +34,11 @@ namespace SharpTUI
         public static delMouseButtonPress onMouseButtonPressed;
         public static delKeyboardButtonPress onKeyboardButtonPressed;
 
-        public static void init(int maxScreensIn){
+        public static void init(){
             //callBacks
             onMouseButtonPressed = mouseButtonPressed;
             onKeyboardButtonPressed = keyboardButtonPressed;
             //other shit
-            maxScreens = maxScreensIn;
-            screens = new Screen[maxScreens];        
             consoleHandle = Kernal32.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
             Thread mouseHandler = new Thread(new ThreadStart(() => new IO.Mouse()));
@@ -69,7 +66,7 @@ namespace SharpTUI
 
             screenBuffer = new Kernal32.CharInfo[screenBuffer.Length];
 
-            foreach (Component component in currentScreen.components) {
+            foreach (Component component in currentScreen.componentList) {
                 if (component != null) {
                     component.render();
                 }
@@ -78,51 +75,21 @@ namespace SharpTUI
             Kernal32.WriteConsoleOutput(consoleHandle, screenBuffer, new Kernal32.Coord((short)xx, (short)yy), new Kernal32.Coord((short)x, (short)y), ref sr);
         }
 
-        public static bool newScreen(string name){
-            if (currentScreens < maxScreens) {
-                foreach (Screen screen in screens) {
-                    if (screen == null) {
-                        screens[currentScreens] = new Screen(name);
-                        currentScreens++;
-                        return true;
-                    }
-                }
-                return true;
-            } else return false;
+        public static void newScreen(string name){
+            screens.Add(name, new Screen());
         }
 
         public static Screen findScreen(string name) {
-            Screen scrn = null;
-            foreach(Screen screen in screens){
-                if (screen != null) { 
-                   if (screen.name == name) {
-                       return screen;
-                       Console.WriteLine("FINDING" + screen.name + "  " + name);
-                    }
-                }
-            }
-            return scrn; 
+            return screens[name];
         }
 
-        public static int findScreenPosition(string name){
-            int i;
-            for(i = 0; i <= maxScreens; i++){
-                if(screens[i].name == name){
-                    return i;
-                }
-            }
-            return -1;
-        }
 
         public static void setScreen(string name){
             currentScreen = findScreen(name);
         }
 
         public static void destroyScreen(string name) {
-            int position = findScreenPosition(name);
-            if (position != -1) {
-                screens[position] = null;
-            }
+            screens[name] = null;
             //Where's the dam garbage truck?
         }
 
@@ -131,7 +98,7 @@ namespace SharpTUI
         }
 
         public static Component findFromPosition(int x, int y) {
-            foreach (Component c in currentScreen.components) {
+            foreach (Component c in currentScreen.componentList) {
                 if (c != null) {
                     if (x > c.left && x < c.right && y > c.top - 1 && y < c.bottom + 1) {
                         return c;
