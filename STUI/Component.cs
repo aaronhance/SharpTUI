@@ -22,13 +22,13 @@ namespace SharpTUI
         public bool[] screenBufferSet = new bool[width * height];
 
         public delegate void delMouseClick();
-        public static delMouseClick onLeftMouseClick;
-        public static delMouseClick onRightMouseClick;
+        public delMouseClick onLeftMouseClick;
+        public delMouseClick onRightMouseClick;
 
         public Component(){
 
         }
-
+        
         public struct Coord{
 
             public int X;
@@ -52,8 +52,8 @@ namespace SharpTUI
 
         public void onMouseClick(char keyPressed) {
             hasLastClick = true;
-            if (keyPressed == Convert.ToChar("L")) Component.onLeftMouseClick.Invoke();
-            else if (keyPressed == Convert.ToChar("R")) Component.onRightMouseClick.Invoke();
+            if (keyPressed == Convert.ToChar("L")) onLeftMouseClick.Invoke();
+            else if (keyPressed == Convert.ToChar("R")) onRightMouseClick.Invoke();
         }
 
 

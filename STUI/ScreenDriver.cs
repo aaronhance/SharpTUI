@@ -23,7 +23,6 @@ namespace SharpTUI
 
         static SafeFileHandle consoleHandle;
         public static Kernal32.CharInfo[] screenBuffer = new Kernal32.CharInfo[80*25];
-        static Kernal32.CharInfo ci;
         public static Kernal32.CONSOLE_SCREEN_BUFFER_INFO consoleInfo = new Kernal32.CONSOLE_SCREEN_BUFFER_INFO();
 
         private static Keys lastKey;
@@ -90,7 +89,6 @@ namespace SharpTUI
 
         public static void destroyScreen(string name) {
             screens[name] = null;
-            //Where's the dam garbage truck?
         }
 
         public static void addComponent(string screenName, Component newComponent){
@@ -124,7 +122,7 @@ namespace SharpTUI
 
             Component comp = findFromPosition(mousePos.x, mousePos.y);
             if (comp != null && comp != componentFocused) {
-                //componentFocused.lostFocus(); // bitch please, I always break your code!
+                //componentFocused.lostFocus(); 
                 componentFocused = comp;
                 componentFocused.gotFocus(mousePos.x, mousePos.y, keyPressed);
                 componentFocused.onMouseClick(keyPressed);
@@ -141,14 +139,13 @@ namespace SharpTUI
                 if (keys.ToString() != "Back" && keys.ToString() != "LShiftKey") {
                     componentFocused.setText(componentFocused.getText() + keys.ToString().ToLower());
                 }
-                else if (keys.ToString() != "Back" && keys.ToString() == "LShiftKey" && lastKey.ToString() == "LShiftKey") {
-                    componentFocused.setText(componentFocused.getText() + keys.ToString().ToUpper());
+                else if (keys.ToString() != "Back" && lastKey.ToString() == "LShiftKey") {
+                    componentFocused.setText(componentFocused.getText() + keys.ToString());
                 }
                 else if (keys.ToString() == "Back" ) {
                     componentFocused.setText(componentFocused.getText().Substring(0, componentFocused.getText().Length - 1));
                 }
             }
-
             lastKey = keys;
         }
 
