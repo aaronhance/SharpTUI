@@ -19,6 +19,8 @@ Example:
         
     public void method(){
     
+        borderPreset();
+    
         ScreenDriver.init();
         ScreenDriver.newScreen("my screen");
         ScreenDriver.setScreen("my screen");
