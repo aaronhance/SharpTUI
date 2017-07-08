@@ -45,7 +45,6 @@ namespace SharpTUI
         }
 
 
-        //I'm also fucking broke, ha jokes on you!
         public virtual void lostFocus(){
             hasFocus = false;
         }
